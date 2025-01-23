@@ -54,6 +54,26 @@ const students= await student.findOne({id:studentId});//find product
  //send req
  return res.status(200).send({ message: "Student is deleted successfully "});
 });
+// Update a student using ID
+app.put("/student/update/:id", async (req, res) => {
+  const studentId = req.params.id;
+  const updates = req.body;
+
+  const isValid = mongoose.isValidObjectId(studentId);
+  if (!isValid) {
+    return res.status(400).send({ message: "Invalid student ID" });
+  }
+
+  const studentData = await student.findById(studentId);
+  if (!studentData) {
+    return res.status(400).send({ message: "Student does not exist" });
+  }
+
+  // Update the student
+  await student.updateOne({ _id: studentId }, updates);
+  return res.status(200).send({ message: "Student is updated successfully" });
+});
+
 
 
 //network port
